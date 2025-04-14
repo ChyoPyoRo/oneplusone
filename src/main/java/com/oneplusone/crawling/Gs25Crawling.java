@@ -13,17 +13,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Gs25Crawling {
-  public static List<ProductDto> crawlByEachEvent() throws InterruptedException {//행사별로 상품 크롤링
+  public List<ProductDto> crawlByEachEvent() throws InterruptedException {//행사별로 상품 크롤링
     List<ProductDto> oneToOneProductList = crawlProduct(EventType.ONE_TO_ONE);
     List<ProductDto> twoToOneProductList = crawlProduct(EventType.TWO_TO_ONE);
     oneToOneProductList.addAll(twoToOneProductList);
     return oneToOneProductList;
   }
-  private static List<ProductDto> crawlProduct(EventType eventType) throws InterruptedException {//상품 크롤링
+
+//  @Async
+//  //비동기로 크롤링 하고 데이터를 저장하는 메서드
+//  public List<ProductDto> asyncCrawlAndSave(EventType eventType) throws InterruptedException {
+//    List<ProductDto> oneToOneProductList = crawlProduct(eventType);
+//  }
+  public List<ProductDto> crawlProduct(EventType eventType) throws InterruptedException {//상품 크롤링
     WebDriverManager.chromedriver().setup();//chromeDriver 버전 확인
     WebDriver driver = new ChromeDriver();//웹 driver 생성
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));//최대 10초로 wait 설정
@@ -35,7 +42,6 @@ public class Gs25Crawling {
     Thread.sleep(1000);//1초 딜레이(차단 방지)
     List<ProductDto> result = new ArrayList<>();
     while (true) {
-      wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".prod_list li")));
       // 상품명 출력
       List<WebElement> tables = driver.findElements(By.cssSelector(".tblwrap.mt50"));
       for (WebElement table : tables) {
@@ -76,7 +82,7 @@ public class Gs25Crawling {
       if (!clicked) break;//click이 눌리지 않았으면 루프 종료
     }
     driver.quit(); // 종료는 필요 시 사용
-    return new ArrayList<>();
+    return result;
   }
 }
 

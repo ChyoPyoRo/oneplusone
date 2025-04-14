@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Category {
-  DRINK("drink", "LABEL_0"),
-  SNACK("snack", "LABEL_1"),
-  FOOD("food", "LABEL_2"),
-  ICECREAM("icecream", "LABEL_3"),
-  NOODLE("noodle", "LABEL_4"),
-  ETC("etc", "LABEL_5"),
+  DRINK( "LABEL_0"),
+  SNACK( "LABEL_1"),
+  FOOD( "LABEL_2"),
+  ICECREAM("LABEL_3"),
+  NOODLE( "LABEL_4"),
+  ETC( "LABEL_5"),
+  UNCLASSIFIED( "NONE")
   ;
-  private final String name;
   private final String label;
   public static Category getCategoryByLabel(String label) {
     for (Category category : Category.values()) {

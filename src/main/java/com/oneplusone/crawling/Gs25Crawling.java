@@ -3,33 +3,25 @@ package com.oneplusone.crawling;
 import com.oneplusone.dtos.ProductDto;
 import com.oneplusone.enums.ConvenienceName;
 import com.oneplusone.enums.EventType;
+import com.oneplusone.repository.CrawlingRepository;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class Gs25Crawling {
-  public List<ProductDto> crawlByEachEvent() throws InterruptedException {//행사별로 상품 크롤링
-    List<ProductDto> oneToOneProductList = crawlProduct(EventType.ONE_TO_ONE);
-    List<ProductDto> twoToOneProductList = crawlProduct(EventType.TWO_TO_ONE);
-    oneToOneProductList.addAll(twoToOneProductList);
-    return oneToOneProductList;
-  }
+  private final CrawlingRepository crawlingRepository;
 
-//  @Async
-//  //비동기로 크롤링 하고 데이터를 저장하는 메서드
-//  public List<ProductDto> asyncCrawlAndSave(EventType eventType) throws InterruptedException {
-//    List<ProductDto> oneToOneProductList = crawlProduct(eventType);
-//  }
   public List<ProductDto> crawlProduct(EventType eventType) throws InterruptedException {//상품 크롤링
     WebDriverManager.chromedriver().setup();//chromeDriver 버전 확인
     WebDriver driver = new ChromeDriver();//웹 driver 생성

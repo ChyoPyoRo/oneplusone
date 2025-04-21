@@ -3,15 +3,18 @@ package com.oneplusone.crawling;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oneplusone.dtos.ProductDto;
+import com.oneplusone.entity.Product;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class ProductCategoryResolver {
   @Value("${huggingface.url}")
@@ -21,31 +24,29 @@ public class ProductCategoryResolver {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  public List<ProductDto> resolveCategory(List<ProductDto> products, ResponseEntity<String> response) throws JsonProcessingException {
-    List<Map<String, Object>> responseList = objectMapper.readValue(response.getBody(), List.class);
-    for(int i = 0 ; i< products.size(); i++){
-      Map<String, Object> prediction = responseList.get(i);
-      String label = (String) prediction.get("label");
-      products.get(i).setProductCategory(label);
-    }
-    return products;
-  }
 
-  public List<ProductDto> getProductCategories(List<ProductDto> products) {
-    List<String> productNameList = products.stream().map(ProductDto::getProductName).toList();
+
+  public ResponseEntity<String> getProductCategories(List<Product> products) {
+    List<String> productNameList = products.stream()
+        .map(Product::getProductName)
+        .toList();
+
     try {
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-      headers.setBearerAuth(huggingFaceToken); // Authorization: Bearer {token}
+      headers.setBearerAuth(huggingFaceToken);
+
       Map<String, Object> body = Map.of("inputs", productNameList);
       HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(body), headers);
+
       ResponseEntity<String> response = restTemplate.postForEntity(huggingFaceUrl, entity, String.class);
-      System.out.println("응답: " + response.getBody());
+      log.info("허깅페이스에서 카테고리 정보 받아옴");
+      return response;
     } catch (Exception e) {
-      System.out.println("API 호출 실패: " + e.getMessage());
+      log.error("API 호출 실패: ", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("API 호출 실패: " + e.getMessage());
     }
-    return products;
   }
 
   public String getBaseUrl() {

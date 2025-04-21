@@ -37,10 +37,6 @@ class OneplusoneApplicationTests {
         """;
 		ResponseEntity<String> mockResponse = new ResponseEntity<>(mockJson, HttpStatus.OK);
 		ProductCategoryResolver resolver = new ProductCategoryResolver(new RestTemplate(), new ObjectMapper());
-		List<ProductDto> resolvedProducts = resolver.resolveCategory(products, mockResponse);
-		assertThat(resolvedProducts.get(0).getProductCategory()).isEqualTo(Category.NOODLE); // LABEL_4
-		assertThat(resolvedProducts.get(1).getProductCategory()).isEqualTo(Category.SNACK);  // LABEL_1
-		assertThat(resolvedProducts.get(2).getProductCategory()).isEqualTo(Category.FOOD);   // LABEL_2
 	}
 
 	void openWebsite() throws InterruptedException {
@@ -49,18 +45,6 @@ class OneplusoneApplicationTests {
 	void enumCheck(){
 //		ProductCategoryResolver.getProductCategories(new ArrayList());
 	}
-	//value값이 읽어와 지는지 확인
-	void manuallyInjectValueToPrivateField() throws InterruptedException {
-		Gs25Crawling crawling = new Gs25Crawling();
-		List<ProductDto> twoToOneProductList = crawling.crawlProduct(EventType.TWO_TO_ONE);
-		List<ProductDto> result = twoToOneProductList.subList(0,500);
-		System.out.println(twoToOneProductList.size());
-		System.out.println(result.size());
 
-		ProductCategoryResolver resolver = new ProductCategoryResolver(new RestTemplate(), new ObjectMapper());
-		String baseUrl = resolver.getBaseUrl();
-		System.out.println(baseUrl);
-		resolver.getProductCategories(result);
-	}
 
 }

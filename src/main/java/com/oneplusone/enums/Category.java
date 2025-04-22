@@ -1,26 +1,23 @@
 package com.oneplusone.enums;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public enum Category {
-  DRINK( "LABEL_0"),
-  SNACK( "LABEL_1"),
-  FOOD( "LABEL_2"),
-  ICECREAM("LABEL_3"),
-  NOODLE( "LABEL_4"),
-  ETC( "LABEL_5"),
-  UNCLASSIFIED( "NONE")
-  ;
-  private final String label;
-  public static Category getCategoryByLabel(String label) {
-    for (Category category : Category.values()) {
-      if (category.getLabel().equals(label)) {
-        return category;
-      }
-    }
-    return null;//잘못된 label 값 전달
+  SNACK, DRINK, FOOD, ICECREAM, NOODLE, UNCLASSIFIED, ETC;
+
+  private static final Map<String, Category> LABEL_MAP = Map.of(
+      "LABEL_0", DRINK,
+      "LABEL_1", SNACK,
+      "LABEL_2", FOOD,
+      "LABEL_3", ICECREAM,
+      "LABEL_4", NOODLE,
+      "LABEL_5", ETC
+  );
+
+  public static Category fromLabel(String label) {
+    return LABEL_MAP.getOrDefault(label.toUpperCase(), UNCLASSIFIED);
   }
 }
+

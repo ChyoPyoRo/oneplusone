@@ -21,9 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class CrawlingService {
   private final CrawlingRepository crawlingRepository;
@@ -59,7 +61,7 @@ public class CrawlingService {
     crawlingRepository.saveProducts(productList);
     return CompletableFuture.completedFuture(null);
   }
-  private void updateCategory() {
+  public void updateCategory() {
     List<Product> unclassifiedProductList = crawlingRepository.getUnclassifiedProductList();
     final int BATCH_SIZE = 400;
 
@@ -78,8 +80,7 @@ public class CrawlingService {
           for (int j = 0; j < batch.size(); j++) {
             Product p = batch.get(j);
             String label = (String) responseList.get(j).get("label");
-            Category category = Category.valueOf(label.toUpperCase());
-
+            Category category = Category.fromLabel(label);
             Product updated = Product.builder()
                 .productId(p.getProductId())
                 .productName(p.getProductName())

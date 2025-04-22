@@ -26,6 +26,5 @@ public class ProductDto {
   }
 
   public void setProductCategory(String categoryLabel) {
-    this.productCategory = Category.getCategoryByLabel(categoryLabel);
   }
 }

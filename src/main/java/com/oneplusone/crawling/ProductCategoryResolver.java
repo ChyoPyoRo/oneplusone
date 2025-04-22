@@ -18,9 +18,10 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class ProductCategoryResolver {
   @Value("${huggingface.url}")
-  private static String huggingFaceUrl;
+  private String huggingFaceUrl;
   @Value("${huggingface.token}")
-  private static String huggingFaceToken;
+  private String huggingFaceToken;
+
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 

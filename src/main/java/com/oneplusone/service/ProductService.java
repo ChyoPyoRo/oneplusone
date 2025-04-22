@@ -21,9 +21,18 @@ public class ProductService {
     Pageable pageable = PageRequest.of(page-1, size);
     return productDetailRepository.findProductUsingPage(pageable);
   }
+  public Page<Product> getProductList(int page, int size, String convenience) {
+    Pageable pageable = PageRequest.of(page-1, size);
+    return productDetailRepository.findProductUsingPage(pageable, convenience);
+  }
 
   public Page<Product> getProductListByCategory(String category, int page, int size) {
     Pageable pageable = PageRequest.of(page-1, size);
     return productDetailRepository.findProductByCategoryUsingPage(pageable, category);
+  }
+
+  public Page<Product> getProductListByCategory(String category, int page, int size, String convenience) {
+    Pageable pageable = PageRequest.of(page-1, size);
+    return productDetailRepository.findProductByCategoryUsingPage(pageable, category, convenience);
   }
 }

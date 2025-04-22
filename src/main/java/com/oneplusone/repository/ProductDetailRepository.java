@@ -4,6 +4,7 @@ import static com.oneplusone.entity.QProduct.product;
 
 import com.oneplusone.entity.Product;
 import com.oneplusone.enums.Category;
+import com.oneplusone.enums.ConvenienceName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,38 @@ public class ProductDetailRepository {
     List<Product> content = queryFactory
         .selectFrom(product)
         .where(product.category.eq(Category.getSameCategory(category)))
+        .orderBy(product.productName.asc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+    long total = queryFactory
+        .select(product.count())
+        .from(product)
+        .fetchOne();
+    return new PageImpl<>(content, pageable, total);
+  }
+
+  public Page<Product> findProductUsingPage(Pageable pageable, String convenience) {
+    List<Product> content = queryFactory
+        .selectFrom(product)
+        .where(product.convenienceBrand.eq(ConvenienceName.getConvenienceName(convenience)))
+        .orderBy(product.productName.asc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+    long total = queryFactory
+        .select(product.count())
+        .from(product)
+        .fetchOne();
+    return new PageImpl<>(content, pageable, total);
+  }
+
+  public Page<Product> findProductByCategoryUsingPage(Pageable pageable, String category, String convenience) {
+    List<Product> content = queryFactory
+        .selectFrom(product)
+        .where(
+            product.category.eq(Category.getSameCategory(category)),
+            product.convenienceBrand.eq(ConvenienceName.getConvenienceName(convenience)))
         .orderBy(product.productName.asc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())

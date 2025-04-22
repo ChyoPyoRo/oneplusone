@@ -37,4 +37,23 @@ public class ProductController {
     log.info("[FINISH][GET] Method name : getProductByCategory");
     return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), result));
   }
+
+  @GetMapping("/product/convenience")
+  public ResponseEntity<ResponseDto> getProductConvenience(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam String convenience) {
+    log.info("[START][GET] Method name : getProductConvenience");
+    log.info("conv : {}, page : {}, size : {}",convenience, page, size);
+    Page<Product> result = productService.getProductList(page, size, convenience);
+    log.info("[FINISH][GET] Method : getProductConvenience");
+    return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), result));
+  }
+
+  @GetMapping("/product/convenience/{category}")
+  public ResponseEntity<ResponseDto> getProductConvenienceByCategory(@PathVariable String category, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam String convenience) {
+    log.info("[START][GET] Method name : getProductConvenienceByCategory");
+    log.info("conv : {}, category : {}, page : {}, size : {}",convenience, category, page, size);
+    Page<Product> result = productService.getProductListByCategory(category, page, size, convenience);
+    log.info("[FINISH][GET] Method : getProductConvenienceByCategory");
+    return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), result));
+
+  }
 }

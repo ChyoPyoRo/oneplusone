@@ -19,5 +19,12 @@ public enum Category {
   public static Category fromLabel(String label) {
     return LABEL_MAP.getOrDefault(label.toUpperCase(), UNCLASSIFIED);
   }
+  public static Category getSameCategory(String inputName) {
+    try {
+      return Category.valueOf(inputName.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      return UNCLASSIFIED;
+    }
+  }
 }
 

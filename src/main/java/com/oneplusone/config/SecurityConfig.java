@@ -20,7 +20,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     http
         .csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/crawling", "/category", "/product").permitAll()
+            .requestMatchers("/crawling", "/category", "/product/**").permitAll()
             .anyRequest().authenticated()
         )
         .httpBasic(Customizer.withDefaults());

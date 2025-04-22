@@ -2,7 +2,6 @@ package com.oneplusone.service;
 
 import com.oneplusone.entity.Product;
 import com.oneplusone.repository.ProductDetailRepository;
-import com.oneplusone.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +19,11 @@ public class ProductService {
 
   public Page<Product> getProductList(int page, int size) {
     Pageable pageable = PageRequest.of(page-1, size);
-    return productDetailRepository.findProductByPage(pageable);
+    return productDetailRepository.findProductUsingPage(pageable);
+  }
+
+  public Page<Product> getProductListByCategory(String category, int page, int size) {
+    Pageable pageable = PageRequest.of(page-1, size);
+    return productDetailRepository.findProductByCategoryUsingPage(pageable, category);
   }
 }

@@ -1,8 +1,6 @@
 package com.oneplusone.crawling;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oneplusone.dtos.ProductDto;
 import com.oneplusone.entity.Product;
 import java.util.List;
 import java.util.Map;

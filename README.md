@@ -31,7 +31,7 @@
 - 즐겨찾는 매장 등록
 
 ## [ERD](https://www.erdcloud.com/d/QnaJSNkLZEWPn6fW3)
-![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 
 
 ## 사용 스택
@@ -40,10 +40,13 @@
 ### [DB]
 - MySQL 8.0 `Left Join 등 여러 복잡한 쿼리를 사용하기 위해`
 ### [인프라]
-- HuggingFace
+- [HuggingFace](https://huggingface.co/ChyoPyoRo/convenience-product-classifier)
 - Aws
 
 ## 예상되는 어려운 점
 ~~개발 완료시 개발하면서 어려웠던 점으로 수정~~
 1. 편의점 별로 사이트 구조가 달라서 크롤링에 어려움이 있을 것 같습니다. 그래서 일단 gs25를 먼저 크롤링 해보고, 모든 기능을 완성한 뒤에, 다른 편의점을 추가해보고 싶습니다.
 2. HuggingFace를 이용해보는 것이 처음이라 난관에 부딫힐 수도 있을 것 같습니다.
+
+
+#### [편의점 위치 정보 출처 ](https://safemap.go.kr/opna/data/dataView.do?objtId=145)

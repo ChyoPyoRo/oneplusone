@@ -1,4 +1,4 @@
-package com.oneplusone.scheduler;
+package com.oneplusone.utils;
 
 import com.oneplusone.service.CrawlingService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.oneplusone.controller;
 
 import com.oneplusone.dtos.ErrorResponseDto;
-import java.sql.SQLIntegrityConstraintViolationException;
+import com.oneplusone.enums.errors.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +17,13 @@ public class ExceptionController {
     log.error("DataIntegrityViolationException");
     log.error(ex.getMessage());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDto("중복된 정보가 있습니다."));
+  }
+
+  @ExceptionHandler(CustomException.class)
+  public ResponseEntity<ErrorResponseDto> handleTokenExcpetion(CustomException ex) {
+    //내가 throw한 Exception
+    log.error(ex.getMessage());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDto(ex.getMessage()));
   }
 
   @ExceptionHandler(Exception.class)

@@ -1,5 +1,6 @@
 package com.oneplusone.utils;
 
+import com.oneplusone.enums.errors.CustomException;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class SimpleTokenUtil {
+public class TokenUtil {
   //jwt를 사용하지 않고 간단하게 UUID값을 가지고 암호화한 토큰을 사용
   @Value("${token.key}")
   private String secretToken;
@@ -40,11 +41,9 @@ public class SimpleTokenUtil {
       String[] parts = new String(decrypted).split(":");
       String uuid = parts[0];
       long timestamp = Long.parseLong(parts[1]);
-
       if (System.currentTimeMillis() - timestamp > EXPIRATION_TIME_MS) {
-        throw new RuntimeException("Token expired");
+        throw new CustomException("Token expired");
       }
-
       return uuid;
     } catch (Exception e) {
       throw new RuntimeException("Decrypt error", e);

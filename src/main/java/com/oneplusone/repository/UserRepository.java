@@ -2,6 +2,7 @@ package com.oneplusone.repository;
 
 import com.oneplusone.entity.UserInfo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import static com.oneplusone.entity.QUserInfo.userInfo;
@@ -20,6 +21,12 @@ public class UserRepository {
   public UserInfo checkUserInfo(String loginId, String password) {
     return queryFactory.selectFrom(userInfo)
         .where(userInfo.loginId.eq(loginId),userInfo.password.eq(password))
+        .fetchOne();
+  }
+
+  public UserInfo getUserByUserId(UUID userId) {
+    return queryFactory.selectFrom(userInfo)
+        .where(userInfo.userId.eq(userId))
         .fetchOne();
   }
 }

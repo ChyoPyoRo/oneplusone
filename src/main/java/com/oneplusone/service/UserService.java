@@ -3,11 +3,11 @@ package com.oneplusone.service;
 import com.oneplusone.dtos.LoginResponseDto;
 import com.oneplusone.dtos.UserPostRequestDto;
 import com.oneplusone.entity.UserInfo;
+import com.oneplusone.enums.errors.CustomException;
 import com.oneplusone.repository.UserRepository;
-import com.oneplusone.utils.SimpleTokenUtil;
+import com.oneplusone.utils.TokenUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
-  private final SimpleTokenUtil tokenUtil;
+  private final TokenUtil tokenUtil;
 
   public void createUser(UserPostRequestDto userPostRequestDto) {
     UserInfo user = UserInfo.builder()
@@ -31,5 +31,12 @@ public class UserService {
     if (userInfo == null) return null;
     //token정보 보내기
     return new LoginResponseDto(tokenUtil.encrypt(userInfo.getUserId().toString()));
+  }
+
+  public UserInfo getUserInfo(String token)  {
+    String userId = tokenUtil.decrypt(token);//시간 초과시 자동으로 에러
+    UserInfo userinfo = userRepository.getUserByUserId(userId);
+    if(userinfo == null) throw new CustomException("해당 유저는 존재하지 않습니다");
+    return userinfo;
   }
 }

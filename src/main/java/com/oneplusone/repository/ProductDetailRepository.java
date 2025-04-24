@@ -2,11 +2,14 @@ package com.oneplusone.repository;
 
 import static com.oneplusone.entity.QProduct.product;
 
+import com.oneplusone.entity.Favorite;
 import com.oneplusone.entity.Product;
+import com.oneplusone.entity.UserInfo;
 import com.oneplusone.enums.Category;
 import com.oneplusone.enums.ConvenienceName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ProductDetailRepository {
   private final ProductRepository productRepository;//DI
+  private final FavoriteRepository favoriteRepository;
   private final JPAQueryFactory queryFactory;
 
 
@@ -82,5 +86,13 @@ public class ProductDetailRepository {
         .from(product)
         .fetchOne();
     return new PageImpl<>(content, pageable, total);
+  }
+
+  public void addFavoriteProduct(Favorite favorite) {
+    favoriteRepository.save(favorite);
+  }
+
+  public Long deleteProduct(UUID uuid, UUID userId) {
+    return queryFactory.delete(product).where(product.productId.eq(uuid)).execute();
   }
 }

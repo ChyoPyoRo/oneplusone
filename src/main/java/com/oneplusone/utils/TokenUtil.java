@@ -1,8 +1,13 @@
 package com.oneplusone.utils;
 
 import com.oneplusone.enums.errors.CustomException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +37,7 @@ public class TokenUtil {
     }
   }
 
-  public  String decrypt(String token) {
-    try {
+  public  String decrypt(String token) throws Exception {
       SecretKeySpec key = new SecretKeySpec(secretToken.getBytes(), "AES");
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.DECRYPT_MODE, key);
@@ -45,9 +49,7 @@ public class TokenUtil {
         throw new CustomException("Token expired");
       }
       return uuid;
-    } catch (Exception e) {
-      throw new RuntimeException("Decrypt error", e);
-    }
+
   }
 
 }

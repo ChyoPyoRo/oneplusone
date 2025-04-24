@@ -39,7 +39,7 @@ public class UserService {
     return new LoginResponseDto(tokenUtil.encrypt(userInfo.getUserId().toString()));
   }
 
-  public UserInfo getUserInfo(String token)  {
+  public UserInfo getUserInfo(String token) throws Exception {
     String userId = tokenUtil.decrypt(token);//시간 초과시 자동으로 에러
     UserInfo userinfo = userRepository.getUserByUserId(UUID.fromString(userId));
     if(userinfo == null) throw new CustomException("해당 유저는 존재하지 않습니다");

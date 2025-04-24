@@ -35,11 +35,23 @@ public class TokenAuthenticationFilter  extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-      } catch (Exception e) {
-        // 토큰이 유효하지 않거나 복호화 실패한 경우 무시 (인증되지 않음)
-        log.warn("Token authentication failed", e);
-        throw new CustomException("Unauthorized");
       }
+      catch (Exception e) {
+        log.warn("Token validation failed: {}", e.getMessage());
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        String errorMessage = "인증에 실패했습니다";
+        if ("Token expired".equals(e.getMessage())) {
+          errorMessage = "토큰이 만료되었습니다. 재로그인 해주세요";
+        }
+
+        response.getWriter().write("{\"errorMessage\":\"" + errorMessage + "\"}");
+        return; // 필터 체인 종료!
+      }
+
     }
     chain.doFilter(request, response);
   }

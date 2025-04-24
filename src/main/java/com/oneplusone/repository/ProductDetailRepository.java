@@ -1,6 +1,7 @@
 package com.oneplusone.repository;
 
 import static com.oneplusone.entity.QProduct.product;
+import static com.oneplusone.entity.QFavorite.favorite;
 
 import com.oneplusone.entity.Favorite;
 import com.oneplusone.entity.Product;
@@ -92,7 +93,15 @@ public class ProductDetailRepository {
     favoriteRepository.save(favorite);
   }
 
-  public Long deleteProduct(UUID uuid, UUID userId) {
-    return queryFactory.delete(product).where(product.productId.eq(uuid)).execute();
+  public Long deleteFavoriteProduct(UUID inputProductId, UUID inputUserId) {
+    return queryFactory.delete(favorite).where(favorite.productId.eq(inputProductId), favorite.userId.eq(inputUserId)).execute();
+  }
+
+  public boolean findFavoriteProduct(UUID inputProductId, UUID inputUserId) {
+    //존재하면 true 없으면 false
+    return queryFactory.selectOne()
+        .from(favorite)
+        .where(favorite.productId.eq(inputProductId), favorite.userId.eq(inputUserId))
+        .fetchFirst() != null;
   }
 }

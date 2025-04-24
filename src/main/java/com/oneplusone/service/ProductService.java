@@ -41,14 +41,16 @@ public class ProductService {
     return productDetailRepository.findProductByCategoryUsingPage(pageable, category, convenience);
   }
 
-  public void addFavoriteProduct(String productId, UserInfo currentUser) {
+  public void addFavoriteProduct(String productId, String currentUserId) {
+    //존재하는 그거인지 확인
+    if(productDetailRepository.findFavoriteProduct(UUID.fromString(productId),UUID.fromString(currentUserId))) throw new CustomException("이미 추가된 즐겨찾기 입니다.");
     //Favorite 타입 생성
-    Favorite favorite = Favorite.builder().productId(UUID.fromString(productId)).userId(currentUser.getUserId()).build();
+    Favorite favorite = Favorite.builder().productId(UUID.fromString(productId)).userId(UUID.fromString(currentUserId)).build();
     productDetailRepository.addFavoriteProduct(favorite);
   }
 
-  public void deleteFavoriteProduct(String productId, UserInfo userInfo) {
-    Long deleteResult = productDetailRepository.deleteProduct(UUID.fromString(productId), userInfo.getUserId());
-    if(deleteResult==0) throw new CustomException("이미 삭제되었거나 존재하지 않는 좋아요 입니다.");
+  public void deleteFavoriteProduct(String productId, String currentUserId) {
+    Long deleteResult = productDetailRepository.deleteFavoriteProduct(UUID.fromString(productId), UUID.fromString(currentUserId));
+    if(deleteResult==0) throw new CustomException("이미 삭제되었거나 존재하지 않는 즐겨찾기입니다.");
   }
 }

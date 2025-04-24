@@ -26,22 +26,23 @@ public class ProductController {
   private final ProductService productService;
   private final UserService userService;
 
-  @DeleteMapping("/favorite/{productId")
-  public ResponseEntity<ResponseDto> removeFavoriteProduct(@PathVariable String productId, @RequestBody String token) {
+  @DeleteMapping("/favorite/{productId}")
+  public ResponseEntity<ResponseDto> removeFavoriteProduct(@PathVariable String productId) {
     log.info("[START][GET] Method name : removeFavoriteProduct");
     //로그인 한 유저의 id 와 product id 의 값을 가지는 좋아요를 취소 가능함
-    UserInfo userInfo = userService.getUserInfo(token);
+    String userInfo = userService.getCurrentUserId();
     productService.deleteFavoriteProduct(productId, userInfo);
     log.info("[FINISH][GET] Method name : removeFavoriteProduct");
+    return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "즐겨찾기 삭제"));
   }
 
   @PostMapping("/favorite/{productId}")
-  public ResponseEntity<ResponseDto> addFavoriteProduct(@PathVariable String productId, @RequestBody String token) {
+  public ResponseEntity<ResponseDto> addFavoriteProduct(@PathVariable String productId) {
     log.info("[START][GET] Method name : addFavoriteProduct");
-    UserInfo userInfo = userService.getUserInfo(token);
+    String userInfo = userService.getCurrentUserId();
     productService.addFavoriteProduct(productId, userInfo);
     log.info("[FINISH][GET] Method name : addFavoriteProduct");
-    return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "등록 완료"));
+    return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "즐겨찾기 등록"));
   }
 
   @GetMapping("/product")
